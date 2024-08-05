@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+
+    <!--<bean id="abstractConverter" class="org.lili.converters.impl.AbstractConverter" abstract="true"/>-->
+
+
+      <!--converter的抽象bean  -->
+  <!--  <bean id="abstractPopulatingConverter" abstract="true" class="org.lili.converters.impl.AbstractPopulatingConverter" />
+
+
+    <bean id="abstractPopulatorList" abstract="true" class="org.lili.converters.impl.DefaultPopulatorList"  />
+-->
+
+    <!--订单-->
+    <!--最简单的Populator 可以嵌套很多  Populator也可以嵌套Convert 默认的Convert-->
+    <alias name="orderConverter" alias="orderConvert"/>
+
+    <bean id="orderPopulator2" class="org.lili.converters.populator.OrderPopulator2"/>
+    <bean id="orderConverter" parent="abstractPopulatingConverter">
+        <property name="targetClass" value="org.lili.dto.businessdto.OrderData"/>
+        <property name="populators">
+            <list merge="true">
+                <ref bean="orderPopulator2"/>
+            </list>
+        </property>
+    </bean>
+
+
+
+    <!--  顾客 自定义Convert和Populator -->
+    <bean id="mkEmployeePopulator" class="org.lili.converters.populator.MKEmployeePopulator" />
+    <bean id="mkEmployeeConverter" class="org.lili.converters.impl.MKEmployeeConverter">
+        <property name="targetClass" value="org.lili.dto.businessdto.MKEmployeeData"/>
+        <property name="populators">
+            <list>
+                <ref bean="mkEmployeePopulator"/>
+            </list>
+        </property>
+    </bean>
+
+    <!--产品 -->
+    <bean id="productConverter" class="org.lili.converters.impl.ProductConverter">
+    </bean>
+    <!--价格-->
+    <bean id="priceInformationConverter" class="org.lili.converters.impl.PriceInformationConverter">
+    </bean>
+
+
+
+
+    <!--报错 实例化Bean失败 -->
+   <!-- <bean id="orderConverter" parent="abstractPopulatingConverter">
+
+        <property name="targetClass" value="org.lili.dto.businessdto.OrderData"/>
+
+        <property name="populators">
+            <list merge="true">
+                <ref bean="orderPopulator"/>
+            </list>
+        </property>
+
+    </bean>-->
+
+    <!--<bean id="baseOrderPopulator" class="org.lili.converters.populator.AbstractOrderPopulator"
+          abstract="true">
+    </bean>
+
+
+    <bean id="orderPopulator" parent="baseOrderPopulator"
+          class="org.lili.converters.populator.OrderPopulator">
+        &lt;!&ndash;<property name="xxxConverter" ref="xxxConverter"/>&ndash;&gt;
+    </bean>-->
+
+</beans>
